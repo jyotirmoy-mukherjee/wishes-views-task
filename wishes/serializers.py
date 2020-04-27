@@ -6,3 +6,5 @@ class WishSerializer(serializers.ModelSerializer):
         model = Wish
         fields = ('id','title','wishtext')
 
+class UserSerializer(serializers.ModelSerializer):
+    pass

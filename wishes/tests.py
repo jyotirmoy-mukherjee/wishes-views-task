@@ -1,20 +1,26 @@
 from django.test import TestCase
 from rest_framework.test import RequestsClient
 import json
+from requests.auth import HTTPBasicAuth
+from django.contrib.auth.models import User
 
 class RestTestCase(TestCase):
 
     def setUp(self):
         self.test_1 = []
-        with open('TestData/http001.json') as f:
+        with open('TestData/http002.json') as f:
             for line in f:
                 self.test_1.append(line)
+        self.username = 'agbeadmin'
+        self.password = 'frescopassword'
+        self.user = User.objects.create_user(username=self.username, password=self.password)
 
     def test_get_all_wishes(self):
         client = RequestsClient()
+        client.auth = HTTPBasicAuth(self.username, self.password)
+        client.headers.update({'x-test': 'true'})
         for ro in self.test_1:
             row = json.loads(ro)
-            print (row)
             res = {}
             if row['request']['method'] == "GET":
                 res = client.get('http://localhost:8000' +
